@@ -8,7 +8,7 @@ from mivolo.model.create_timm_model import create_model
 from mivolo.structures import PersonAndFaceCrops, PersonAndFaceResult
 from timm.data import resolve_data_config
 
-_logger = logging.getLogger("MiVOLO")
+#_logger = logging.getLogger("MiVOLO")
 has_compile = hasattr(torch, "compile")
 
 
@@ -89,8 +89,8 @@ class MiVOLO:
         self.half = half and self.device.type != "cpu"
 
         self.meta: Meta = Meta().load_from_ckpt(ckpt_path, disable_faces, use_persons)
-        if self.verbose:
-            _logger.info(f"Model meta:\n{str(self.meta)}")
+        #if self.verbose:
+            #_logger.info(f"Model meta:\n{str(self.meta)}")
 
         model_name = f"mivolo_d1_{self.meta.input_size}"
         self.model = create_model(
@@ -99,10 +99,10 @@ class MiVOLO:
             in_chans=self.meta.in_chans,
             pretrained=False,
             checkpoint_path=ckpt_path,
-            filter_keys=["fds."],
+            filter_keys=["fds."]
         )
         self.param_count = sum([m.numel() for m in self.model.parameters()])
-        _logger.info(f"Model {model_name} created, param count: {self.param_count}")
+        #_logger.info(f"Model {model_name} created, param count: {self.param_count}")
 
         self.data_config = resolve_data_config(
             model=self.model,
@@ -196,13 +196,13 @@ class MiVOLO:
             detected_bboxes.set_age(face_ind, age)
             detected_bboxes.set_age(body_ind, age)
 
-            _logger.info(f"\tage: {age}")
+            #_logger.info(f"\tage: {age}")
 
             if gender_probs is not None:
                 gender = "male" if gender_indx[index].item() == 0 else "female"
                 gender_score = gender_probs[index].item()
 
-                _logger.info(f"\tgender: {gender} [{int(gender_score * 100)}%]")
+                #_logger.info(f"\tgender: {gender} [{int(gender_score * 100)}%]")
 
                 detected_bboxes.set_gender(face_ind, gender, gender_score)
                 detected_bboxes.set_gender(body_ind, gender, gender_score)
@@ -231,10 +231,10 @@ class MiVOLO:
             bodies_crops, self.input_size, self.data_config["mean"], self.data_config["std"], device=self.device
         )
 
-        _logger.info(
-            f"faces_input: {faces_input.shape if faces_input is not None else None}, "
-            f"person_input: {person_input.shape if person_input is not None else None}"
-        )
+        #_logger.info(
+            #f"faces_input: {faces_input.shape if faces_input is not None else None}, "
+            #f"person_input: {person_input.shape if person_input is not None else None}"
+        #)
 
         return faces_input, person_input, faces_inds, bodies_inds
 

@@ -46,7 +46,7 @@ class AnnotType(Enum):
 
     @classmethod
     def _missing_(cls, value):
-        print(f"WARN: Unknown annotation type {value}.")
+        #print(f"WARN: Unknown annotation type {value}.")
         return AnnotType.NONE
 
 
@@ -68,7 +68,7 @@ class InputType(Enum):
 
 def get_input_type(input_path: str) -> InputType:
     if os.path.isdir(input_path):
-        print("Input is a folder, only images will be processed")
+        #print("Input is a folder, only images will be processed")
         return InputType.Image
     elif os.path.isfile(input_path):
         if input_path.endswith(VIDEO_EXT):
@@ -93,7 +93,7 @@ def read_csv_annotation_file(annotation_file: str, images_dir: str, ignore_witho
     df = pd.read_csv(annotation_file, sep=",")
 
     annot_type = AnnotType("persons") if "person_x0" in df.columns else AnnotType("original")
-    print(f"Reading {annotation_file} (type: {annot_type})...")
+    #print(f"Reading {annotation_file} (type: {annot_type})...")
 
     missing_images = 0
     for index, row in df.iterrows():
@@ -120,6 +120,6 @@ def read_csv_annotation_file(annotation_file: str, images_dir: str, ignore_witho
 
         bboxes_per_image[img_path].append(pic_info)
 
-    if missing_images > 0:
-        print(f"WARNING: Missing images: {missing_images}/{len(df)}")
+    #if missing_images > 0:
+        #print(f"WARNING: Missing images: {missing_images}/{len(df)}")
     return bboxes_per_image, annot_type
