@@ -39,11 +39,11 @@ def run_inference(input_path, detector_weights, checkpoint, device="cpu"):
 def get_age(input_path):
     return run_inference(
         input_path=input_path,
-        detector_weights="MiVOLO/PaperCode/yolov8x_person_face.pt",
-        checkpoint="MiVOLO/PaperCode/model_age_utk_4.23.pth.tar",
+        detector_weights="MiVOLO/yolov8x_person_face.pt",
+        checkpoint="MiVOLO/model_age_utk_4.23.pth.tar",
         device="cpu"
     )[1]
 
 if __name__ == "__main__":
-    age = get_age("MiVOLO/PaperCode/WIN_20241101_13_29_05_Pro.jpg")
+    age = get_age("FGNET/images/001A02.jpg")
     print(age)
