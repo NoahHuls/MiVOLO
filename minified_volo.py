@@ -1,4 +1,5 @@
 import os
+import random
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -55,30 +56,12 @@ def get_age(input_path):
                 return age
     return None
 
-if __name__ == "__main__":
-    data = []
-    fails = []
-    foldername = "FGNET"
-
-    for filename in os.listdir(foldername):
-        if filename.endswith(".JPG"):
-            original_age = int(filename[4:6])
-
-            image_path = os.path.join(foldername, filename.replace("JPG", "jpg"))
-            estimated_age = get_age(image_path)
-            if estimated_age is not None:
-                data.append({
-                    "Filename": filename,
-                    "Original Age": original_age,
-                    "Estimated Age": round(estimated_age)
-                })
-            else:
-                fails.append(image_path)
-
+def show_confusion_matrix(data, show_mae = False):
     df = pd.DataFrame(data)
 
-    mae = np.mean(np.abs(df["Original Age"] - df["Estimated Age"]))
-    print(f"Mean Absolute Error (MAE): {mae}")
+    if show_mae:
+        mae = np.mean(np.abs(df["Original Age"] - df["Estimated Age"]))
+        print(f"Mean Absolute Error (MAE): {mae}")
 
     df['Original_Class'] = np.where(df['Original Age'] >= 25, 'Over 25', 'Under 25')
     df['Estimated_Class'] = np.where(df['Estimated Age'] >= 25, 'Over 25', 'Under 25')
@@ -102,3 +85,91 @@ if __name__ == "__main__":
 
     print(df)
     plt.show()
+
+def single_folder_all_check(folder):
+    data = []
+    fails = []
+    foldername = "CustomPics/" + folder
+
+    for filename in os.listdir(foldername):
+        if filename.endswith(".JPG"):
+            original_age = int(filename[4:6])
+
+            image_path = os.path.join(foldername, filename.replace("JPG", "jpg"))
+            estimated_age = get_age(image_path)
+            if estimated_age is not None:
+                data.append({
+                    "Filename": filename,
+                    "Original Age": original_age,
+                    "Estimated Age": round(estimated_age)   
+                })
+            else:
+                fails.append(image_path)
+
+
+    show_confusion_matrix(data, show_mae=True)
+
+def multi_folder_minimum_check():
+    data = []
+    fails = []
+    base_folder = "CustomPics"
+
+    for folder in os.listdir(base_folder):
+        subfolder_path = os.path.join(base_folder, folder)
+
+        if os.path.isdir(subfolder_path):
+            estimated_ages = []
+
+            for filename in os.listdir(subfolder_path):
+                if filename.endswith(".JPG"):
+                    original_age = int(filename[4:6])
+
+                    image_path = os.path.join(subfolder_path, filename.replace("JPG", "jpg"))
+                    estimated_age = get_age(image_path)
+                    if estimated_age is not None:
+                        estimated_ages.append(estimated_age)
+                    else:
+                        fails.append(image_path)
+
+            if estimated_ages:
+                min_estimated_age = round(min(estimated_ages))
+                data.append({
+                    "Folder": folder,
+                    "Original Age": original_age,
+                    "Estimated Age": min_estimated_age
+                })
+
+    show_confusion_matrix(data)
+
+def multi_folder_random_check():
+    data = []
+    fails = []
+    base_folder = "CustomPics"
+
+    for folder in os.listdir(base_folder):
+        subfolder_path = os.path.join(base_folder, folder)
+
+        if os.path.isdir(subfolder_path):
+            png_files = [f for f in os.listdir(subfolder_path) if f.endswith(".JPG")]
+
+            if png_files:
+                random_filename = random.choice(png_files)
+                original_age = int(random_filename[4:6])
+                image_path = os.path.join(subfolder_path, random_filename.replace("JPG", "jpg"))
+
+                estimated_age = get_age(image_path)
+                if estimated_age is not None:
+                    data.append({
+                        "Folder": folder,
+                        "Original Age": original_age,
+                        "Estimated Age": round(estimated_age)
+                    })
+                else:
+                    fails.append(image_path)
+
+    show_confusion_matrix(data, show_mae=True)
+
+if __name__ == "__main__":
+    # single_folder_all_check("A")
+    multi_folder_minimum_check()
+    # multi_folder_random_check()
