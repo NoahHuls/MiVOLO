@@ -70,7 +70,7 @@ def main():
         torch.backends.cudnn.benchmark = True
     os.makedirs(args.output, exist_ok=True)
 
-    predictor = Predictor(args, verbose=True)
+    predictor = Predictor(args, verbose=False)
 
     input_type = get_input_type(args.input)
 

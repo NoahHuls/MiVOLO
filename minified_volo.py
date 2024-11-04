@@ -13,11 +13,11 @@ from timm.utils import setup_default_logging
 import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.CRITICAL)
 _logger = logging.getLogger("inference")
 
 def run_inference(input_path, detector_weights, checkpoint, device="cpu"):
-    setup_default_logging()
+    setup_default_logging(default_level=logging.CRITICAL)
     if torch.cuda.is_available() and device == "cuda":
         torch.backends.cuda.matmul.allow_tf32 = True
         torch.backends.cudnn.benchmark = True

@@ -133,7 +133,7 @@ def validate(args):
         half=args.half,
         use_persons=args.with_persons,
         disable_faces=args.disable_faces,
-        verbose=True,
+        verbose=False,
     )
 
     dataset, loader = build_data(
