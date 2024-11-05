@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from statistics import mean, median
 import logging
 import cv2
 import torch
@@ -169,7 +170,109 @@ def multi_folder_random_check():
 
     show_confusion_matrix(data, show_mae=True)
 
+def multi_folder_average_check():
+    data = []
+    fails = []
+    base_folder = "CustomPics"
+
+    for folder in os.listdir(base_folder):
+        subfolder_path = os.path.join(base_folder, folder)
+
+        if os.path.isdir(subfolder_path):
+            estimated_ages = []
+
+            for filename in os.listdir(subfolder_path):
+                if filename.endswith(".JPG"):
+                    original_age = int(filename[4:6])
+
+                    image_path = os.path.join(subfolder_path, filename.replace("JPG", "jpg"))
+                    estimated_age = get_age(image_path)
+                    if estimated_age is not None:
+                        estimated_ages.append(estimated_age)
+                    else:
+                        fails.append(image_path)
+
+            if estimated_ages:
+                avg_estimated_age = round(mean(estimated_ages))
+                data.append({
+                    "Folder": folder,
+                    "Original Age": original_age,
+                    "Estimated Age": avg_estimated_age
+                })
+
+    show_confusion_matrix(data)
+
+
+def multi_folder_median_check():
+    data = []
+    fails = []
+    base_folder = "CustomPics"
+
+    for folder in os.listdir(base_folder):
+        subfolder_path = os.path.join(base_folder, folder)
+
+        if os.path.isdir(subfolder_path):
+            estimated_ages = []
+
+            for filename in os.listdir(subfolder_path):
+                if filename.endswith(".JPG"):
+                    original_age = int(filename[4:6])
+
+                    image_path = os.path.join(subfolder_path, filename.replace("JPG", "jpg"))
+                    estimated_age = get_age(image_path)
+                    if estimated_age is not None:
+                        estimated_ages.append(estimated_age)
+                    else:
+                        fails.append(image_path)
+
+            if estimated_ages:
+                median_estimated_age = round(median(estimated_ages))
+                data.append({
+                    "Folder": folder,
+                    "Original Age": original_age,
+                    "Estimated Age": median_estimated_age
+                })
+
+    show_confusion_matrix(data)
+
+
+def multi_folder_second_minimum_check():
+    data = []
+    fails = []
+    base_folder = "CustomPics"
+
+    for folder in os.listdir(base_folder):
+        subfolder_path = os.path.join(base_folder, folder)
+
+        if os.path.isdir(subfolder_path):
+            estimated_ages = []
+
+            for filename in os.listdir(subfolder_path):
+                if filename.endswith(".JPG"):
+                    original_age = int(filename[4:6])
+
+                    image_path = os.path.join(subfolder_path, filename.replace("JPG", "jpg"))
+                    estimated_age = get_age(image_path)
+                    if estimated_age is not None:
+                        estimated_ages.append(estimated_age)
+                    else:
+                        fails.append(image_path)
+
+            if estimated_ages:
+                sorted_ages = sorted(estimated_ages)
+                second_minimum_age = round(sorted_ages[1] if len(sorted_ages) > 1 else sorted_ages[0])
+                data.append({
+                    "Folder": folder,
+                    "Original Age": original_age,
+                    "Estimated Age": second_minimum_age
+                })
+
+    show_confusion_matrix(data)
+
 if __name__ == "__main__":
-    # single_folder_all_check("A")
-    multi_folder_minimum_check()
+    # single_folder_all_check("J")
+    # multi_folder_minimum_check()
     # multi_folder_random_check()
+    # multi_folder_average_check()
+    # multi_folder_median_check()
+    multi_folder_second_minimum_check()
