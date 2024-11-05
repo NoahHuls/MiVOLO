@@ -57,7 +57,12 @@ def get_age(input_path):
                 return age
     return None
 
-def show_confusion_matrix(data, title = "Confusion Matrix (Over/Under 25)", show_mae = False):
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def show_confusion_matrix(data, title="Confusion Matrix (Over/Under 25)", show_mae=False):
     df = pd.DataFrame(data)
 
     if show_mae:
@@ -79,13 +84,19 @@ def show_confusion_matrix(data, title = "Confusion Matrix (Over/Under 25)", show
     }).set_index("Predicted")
 
     plt.figure(figsize=(8, 6))
-    sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', cbar=False)
-    plt.title(title)
-    plt.ylabel('Actual Class')
-    plt.xlabel('Predicted Class')
+    sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', cbar=False, 
+                annot_kws={"size": 16})
+
+    plt.title(title, fontsize=18)
+    plt.ylabel('Actual Class', fontsize=16)
+    plt.xlabel('Predicted Class', fontsize=16)
+
+    plt.xticks(fontsize=14)
+    plt.yticks(fontsize=14)
 
     print(df)
     plt.show()
+
 
 def single_folder_all_check(folder):
     data = []
