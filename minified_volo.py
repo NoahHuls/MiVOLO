@@ -57,7 +57,7 @@ def get_age(input_path):
                 return age
     return None
 
-def show_confusion_matrix(data, show_mae = False):
+def show_confusion_matrix(data, title = "Confusion Matrix (Over/Under 25)", show_mae = False):
     df = pd.DataFrame(data)
 
     if show_mae:
@@ -80,7 +80,7 @@ def show_confusion_matrix(data, show_mae = False):
 
     plt.figure(figsize=(8, 6))
     sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', cbar=False)
-    plt.title('Confusion Matrix (Over/Under 25)')
+    plt.title(title)
     plt.ylabel('Actual Class')
     plt.xlabel('Predicted Class')
 
@@ -140,7 +140,7 @@ def multi_folder_minimum_check():
                     "Estimated Age": min_estimated_age
                 })
 
-    show_confusion_matrix(data)
+    show_confusion_matrix(data, "Metric: Minimum")
 
 def multi_folder_random_check():
     data = []
@@ -168,7 +168,7 @@ def multi_folder_random_check():
                 else:
                     fails.append(image_path)
 
-    show_confusion_matrix(data)
+    show_confusion_matrix(data, "Metric: Random")
 
 def multi_folder_average_check():
     data = []
@@ -200,7 +200,7 @@ def multi_folder_average_check():
                     "Estimated Age": avg_estimated_age
                 })
 
-    show_confusion_matrix(data)
+    show_confusion_matrix(data, "Metric: Average")
 
 
 def multi_folder_median_check():
@@ -233,7 +233,7 @@ def multi_folder_median_check():
                     "Estimated Age": median_estimated_age
                 })
 
-    show_confusion_matrix(data)
+    show_confusion_matrix(data, "Metric: Median")
 
 
 def multi_folder_second_minimum_check():
@@ -267,12 +267,12 @@ def multi_folder_second_minimum_check():
                     "Estimated Age": second_minimum_age
                 })
 
-    show_confusion_matrix(data)
+    show_confusion_matrix(data, "Metric: One above Minimum")
 
 if __name__ == "__main__":
     # single_folder_all_check("J")
-    # multi_folder_minimum_check()
     # multi_folder_random_check()
     # multi_folder_average_check()
     # multi_folder_median_check()
+    # multi_folder_minimum_check()
     multi_folder_second_minimum_check()
