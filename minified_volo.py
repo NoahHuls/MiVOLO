@@ -168,7 +168,7 @@ def multi_folder_random_check():
                 else:
                     fails.append(image_path)
 
-    show_confusion_matrix(data, show_mae=True)
+    show_confusion_matrix(data)
 
 def multi_folder_average_check():
     data = []
